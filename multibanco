@@ -1,0 +1,353 @@
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+public class Multibanco extends JFrame {
+	int balanco = 10;
+	String[] sequenciaIntroduzida = new String[4];
+	String[] movimentosHist = new String[100];
+	int sequenciaIntroduzidaIndex = 0;
+	int transacaoIndex = 0;
+	boolean prontoIntroduzir = false;
+
+	public Multibanco(){
+		super("Multibanco");
+		for(int i =0; i <= 3; i++){
+			sequenciaIntroduzida[i] = "";
+		}
+		setResizable(false);
+		setLocationRelativeTo(null);
+		buildApp();
+		pack();
+		setSize(600, 350);
+		setVisible(true);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+	}
+	
+	protected void buildApp(){
+
+		JLabel displayArea = new JLabel("<html>Área de Instrução: <br> Selecione a quantia que pretende levantar. <br> Balanço: \u20AC" + balanco + "</html>");
+		displayArea.setOpaque(true);
+		displayArea.setBackground(Color.white);
+		displayArea.setPreferredSize(new Dimension(100, 100));
+		JPanel bottomArea = new JPanel();
+		bottomArea.setLayout(new BorderLayout(0,0));
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BorderLayout(0,0));
+		JLabel inputDisplay = new JLabel("Input Area:");
+		inputDisplay.setBorder(BorderFactory.createLineBorder(Color.black));
+		bottomArea.add(inputDisplay, BorderLayout.NORTH);
+		
+		GridBagLayout buttonGrid = new GridBagLayout();
+		buttonPanel.setLayout(buttonGrid);
+		GridBagConstraints bPConst = new GridBagConstraints();
+	
+		bPConst.weightx= 0.1;
+		bPConst.weighty= 0.1;
+		JButton withDraw1 = new JButton("Levantar \u20AC5");
+		bPConst.gridx = 0;
+		bPConst.gridy = 0;	
+		bPConst.insets = new Insets(0, 0, 5, 5);
+		withDraw1.setSize(new Dimension(200, 30));
+		buttonPanel.add(withDraw1, bPConst);
+		JButton withDraw2 = new JButton("Levantar \u20AC10");
+		bPConst.gridx = 0;
+		bPConst.gridy = 1;
+		withDraw2.setSize(new Dimension(200, 30));
+		buttonPanel.add(withDraw2, bPConst);
+		JButton withDraw3 = new JButton("Levantar \u20AC20");
+		bPConst.gridx = 0;
+		bPConst.gridy = 2;
+		withDraw3.setSize(new Dimension(200, 30));
+		buttonPanel.add(withDraw3, bPConst);
+		JButton deposit = new JButton("Depositar");
+		bPConst.gridx = 0;
+		bPConst.gridy = 3;
+		deposit.setSize(new Dimension(200, 30));
+		buttonPanel.add(deposit, bPConst);
+		JButton quit = new JButton("Sair");
+		bPConst.gridx = 0;
+		bPConst.gridy = 4;
+		bPConst.anchor = GridBagConstraints.PAGE_END;
+		quit.setSize(new Dimension(200, 30));
+		buttonPanel.add(quit, bPConst);
+		JButton number1 = new JButton("1");
+		bPConst.gridx = 1;
+		bPConst.gridy = 0;
+		number1.setSize(new Dimension(200, 30));
+		buttonPanel.add(number1, bPConst);
+		JButton number2 = new JButton("2");
+		bPConst.gridx = 2;
+		bPConst.gridy = 0;
+		number2.setSize(new Dimension(200, 30));
+		buttonPanel.add(number2, bPConst);
+		JButton number3 = new JButton("3");
+		bPConst.gridx = 3;
+		bPConst.gridy = 0;
+		number3.setSize(new Dimension(200, 30));
+		buttonPanel.add(number3, bPConst);
+		JButton number4 = new JButton("4");
+		bPConst.gridx = 1;
+		bPConst.gridy = 1;
+		number4.setSize(new Dimension(200, 30));
+		buttonPanel.add(number4, bPConst);
+		JButton number5 = new JButton("5");
+		bPConst.gridx = 2;
+		bPConst.gridy = 1;
+		number5.setSize(new Dimension(200, 30));
+		buttonPanel.add(number5, bPConst);
+		JButton number6 = new JButton("6");
+		bPConst.gridx = 3;
+		bPConst.gridy = 1;
+		number6.setSize(new Dimension(200, 30));
+		buttonPanel.add(number6, bPConst);
+		JButton number7 = new JButton("7");
+		bPConst.gridx = 1;
+		bPConst.gridy = 2;
+		number7.setSize(new Dimension(200, 30));
+		buttonPanel.add(number7, bPConst);
+		JButton number8 = new JButton("8");
+		bPConst.gridx = 2;
+		bPConst.gridy = 2;
+		number8.setSize(new Dimension(200, 30));
+		buttonPanel.add(number8, bPConst);
+		JButton number9 = new JButton("9");
+		bPConst.gridx = 3;
+		bPConst.gridy = 2;
+		number9.setSize(new Dimension(200, 30));
+		buttonPanel.add(number9, bPConst);
+		JButton number0 = new JButton("0");
+		bPConst.gridx = 1;
+		bPConst.gridy = 3;
+		number0.setSize(new Dimension(200, 30));
+		buttonPanel.add(number0, bPConst);
+		JButton clear = new JButton("Limpar");
+		bPConst.gridx = 2;
+		bPConst.gridy = 3;
+		clear.setSize(new Dimension(200, 30));
+		buttonPanel.add(clear, bPConst);
+		JButton enter = new JButton("Enter");
+		bPConst.gridx = 3;
+		bPConst.gridy = 3;
+		enter.setSize(new Dimension(200, 30));
+		buttonPanel.add(enter, bPConst);
+		bottomArea.add(buttonPanel, BorderLayout.CENTER);
+		add(displayArea,  BorderLayout.NORTH);
+		add(bottomArea, BorderLayout.CENTER);
+		
+		withDraw1.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				if(balanco >= 5){
+					balanco = balanco - 5;
+					displayArea.setText("<html>\u20AC5 Levantados <br><br>" + transacaoConcluida() + "</html>");
+					prontoIntroduzir = false;
+					System.out.println("Utilizador levantou \u20AC5");
+					updatemovimentosHist("Utilizador levantou \u20AC5");
+				} else {
+					displayArea.setText("<html> O seu saldo é inferior a \u20AC5. Não é possivel levantar <br><br>" 
+					+ transacaoConcluida() + "</html>");
+				}
+			}	
+		});
+		withDraw2.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				if(balanco >= 10){
+					balanco = balanco - 10;
+					displayArea.setText("<html>\u20AC10 Levantados <br><br>" + transacaoConcluida() + "</html>");
+					prontoIntroduzir = false;
+					System.out.println("Utilizador levantou \u20AC10");
+					updatemovimentosHist("Utilizador levantou \u20AC10");
+				} else {
+					displayArea.setText("<html> O seu saldo é inferior a \u20AC10. Não é possivel levantar <br><br>" 
+					+ transacaoConcluida() + "</html>");
+				}
+				
+			}	
+		});
+		withDraw3.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				if(balanco >= 20){
+					balanco = balanco - 20;
+					displayArea.setText("<html>\u20AC20 Levantados <br><br>" + transacaoConcluida() + "</html>");
+					prontoIntroduzir = false;
+					System.out.println("Utilizador levantou \u20AC20");
+					updatemovimentosHist("Utilizador levantou \u20AC20");
+				} else {
+					displayArea.setText("<html> O seu saldo é inferior a \u20AC20. Não é possivel levantar <br><br>" 
+					+ transacaoConcluida() + "</html>");
+				}
+			}	
+		});
+		quit.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				JOptionPane.showMessageDialog(null, "O seu recibo: \n" + printReceipt());
+				JOptionPane.showMessageDialog(null, "A sair... A voltar ao Login");
+				dispose();
+				new Login();
+			}	
+		});
+		clear.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				inputDisplay.setText("Valor Apresentado: ");
+				displayArea.setText("<html>Valor limpo <br><br>" 
+				+ transacaoConcluida() +"</html>");
+				clearInput();
+				prontoIntroduzir = false;
+			}	
+		});
+		number1.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				inputDisplay.setText("Valor Apresentado: " + updateInput("1"));
+			}	
+		});
+		number2.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				inputDisplay.setText("Valor Apresentado: " + updateInput("2"));
+			}	
+		});
+		number3.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				inputDisplay.setText("Valor Apresentado: " + updateInput("3"));
+			}	
+		});
+		number4.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				inputDisplay.setText("Valor Apresentado: " + updateInput("4"));
+			}	
+		});
+		number5.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				inputDisplay.setText("Valor Apresentado: " + updateInput("5"));
+			}	
+		});
+		number6.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				inputDisplay.setText("Valor Apresentado: " + updateInput("6"));
+			}	
+		});
+		number7.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				inputDisplay.setText("Valor Apresentado: " + updateInput("7"));
+			}	
+		});
+		number8.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				inputDisplay.setText("Valor Apresentado: " + updateInput("8"));
+			}	
+		});
+		number9.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				inputDisplay.setText("Valor Apresentado: " + updateInput("9"));
+			}	
+		});
+		number0.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				inputDisplay.setText("Valor Apresentado: " + updateInput("0"));
+			}	
+		});
+		deposit.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+					displayArea.setText("<html> Deposito selecionado <br> Introduza um valor inferior ou igual a \u20AC1000 e pressione enter <br><br>" 
+					+ transacaoConcluida() + "</html>" );
+					prontoIntroduzir = true;
+			}	
+		});
+		enter.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event) {
+				if(prontoIntroduzir == true){
+					if(Integer.parseInt(getsequenciaIntroduzida()) > 1000){
+						displayArea.setText("Esse valor é maior que \u20AC1000!");
+						clearInput();
+						inputDisplay.setText("Valor Apresentado: ");
+						prontoIntroduzir = false;
+					} else if(Integer.parseInt(getsequenciaIntroduzida()) == 0 || getsequenciaIntroduzida().equals("0000")){
+						displayArea.setText("Ainda não introduziu um valor");
+						clearInput();
+						inputDisplay.setText("Valor Apresentado: ");
+						prontoIntroduzir = false;
+					} else {
+						updatebalanco(Integer.parseInt(getsequenciaIntroduzida()));
+						displayArea.setText("<html> Valor depositado \u20AC" + getsequenciaIntroduzida() 
+						+ "! <br><br>" + transacaoConcluida() + "</html>");
+						System.out.println("Utilizador depositou \u20AC" + getsequenciaIntroduzida());
+						updatemovimentosHist("Utilizador depositou \u20AC" + getsequenciaIntroduzida());
+					}
+					clearInput();
+					inputDisplay.setText("Valor Apresentado: ");
+					prontoIntroduzir = false;
+				} else {
+					displayArea.setText("<html> Escolha o que fazer <br><br>" + transacaoConcluida() + "</html>");
+					clearInput();
+					inputDisplay.setText("Valor Apresentado: ");
+				}
+				
+			}	
+		});	
+	} 
+	void clearInput(){
+		for(int i =0; i <= 3; i++){
+			sequenciaIntroduzida[i] = "";	
+		}
+		sequenciaIntroduzidaIndex = 0;
+	}
+	String updateInput(String n){
+		if(sequenciaIntroduzidaIndex <= 3){
+			sequenciaIntroduzida[sequenciaIntroduzidaIndex] = n;
+			sequenciaIntroduzidaIndex++;
+		
+			StringBuilder strBuilder = new StringBuilder();
+			for (int i = 0; i < sequenciaIntroduzida.length; i++) {
+				strBuilder.append(sequenciaIntroduzida[i]);
+			}
+			String newString = strBuilder.toString();
+			return newString;
+		} else{
+			StringBuilder strBuilder = new StringBuilder();
+			for (int i = 0; i <= 3; i++) {
+				strBuilder.append(sequenciaIntroduzida[i]);
+			}
+			String newString = strBuilder.toString();
+			return newString;
+		}
+	}
+	
+	String getsequenciaIntroduzida(){
+		StringBuilder strBuilder = new StringBuilder();
+		if(sequenciaIntroduzida[0] == ""){
+			return "0000";
+		} else {
+			for (int i = 0; i < sequenciaIntroduzida.length; i++) {
+				strBuilder.append(sequenciaIntroduzida[i]);
+			}
+			String newString = strBuilder.toString();
+			return newString;
+		}
+	}
+	String transacaoConcluida(){
+		return "Área de Instrução: <br> Selecione um montante e o que fazer. <br> Balanço: \u20AC" + balanco;
+	}
+	void updatebalanco(int l){
+		balanco += l;
+	}
+	void updatemovimentosHist(String t){
+		movimentosHist[transacaoIndex] = t;
+		transacaoIndex++;
+	}
+	String printReceipt(){
+		if(sequenciaIntroduzida[0].equals(null)){
+			return "Não foram feitas transações";
+		} else{
+			StringBuilder strBuilder = new StringBuilder();
+			for (int i = 0; i < transacaoIndex; i++) {
+				strBuilder.append(movimentosHist[i] + "\n");
+			}
+			String newString = strBuilder.toString();
+			return newString;
+	   }
+	}
+
+	public static void main (String[] args){
+		new Login();	
+	}
+	
+}
